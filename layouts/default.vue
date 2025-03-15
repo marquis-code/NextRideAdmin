@@ -1,11 +1,6 @@
 <template>
         <div >
                 <NuxtPage />
-                <Footer id="contact-us" />
-                 <!-- <ContactForm /> -->
+                <!-- <Footer id="contact-us" /> -->
         </div>
 </template>
-
-<!-- <div class="min-w-screen-sm mx-auto px-4">
-        <NuxtPage />
-      </div> -->

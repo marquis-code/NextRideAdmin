@@ -1,7 +1,7 @@
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
-  target: 'static',
+  ssr: false,
   postcss: {
     plugins: {
       "postcss-import": {},
@@ -12,7 +12,7 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: "Buildr - Build the future of your business",
+      title: "NextRide Admin",
       htmlAttrs: { lang: "en" },
       meta: [
         { charset: "utf-8" },
@@ -49,12 +49,12 @@ export default defineNuxtConfig({
       enabled: true
     },
     meta: {
-      title: "Buildr - Build the future of your business",
+      title: "NextRide Admin",
       author: "Marquis",
       mobileAppIOS: false,
       mobileApp: true,
       description:
-        "specialize in software development, product design, and bespoke solutions to help businesses innovate and thrive in the digital age.",
+        "",
       theme_color: "#27396B",
       background_color: "#27396B",
       display: "standalone",

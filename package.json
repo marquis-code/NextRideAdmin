@@ -21,10 +21,14 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/pwa": "^3.3.5",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "aos": "^3.0.0-beta.6",
+    "chart.js": "^4.4.8",
+    "lucide-vue-next": "^0.482.0",
     "vue3-toastify": "^0.2.1"
   }
 }
