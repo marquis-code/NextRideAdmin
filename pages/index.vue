@@ -1,209 +1,181 @@
 <template>
-  <div class="space-y-6">
-    <!-- Stats Overview -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <div
-        v-for="stat in stats"
-        :key="stat.name"
-        class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm"
-      >
-        <div class="flex items-center">
-          <component
-            :is="stat.icon"
-            class="w-8 h-8 text-primary-500"
-          />
-          <div class="ml-4">
-            <p class="text-sm font-medium text-gray-600 dark:text-gray-400">
-              {{ stat.name }}
-            </p>
-            <p class="text-2xl font-semibold text-gray-900 dark:text-white">
-              {{ stat.value }}
-            </p>
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
+    <div class="max-w-md w-full space-y-8">
+      <div class="text-center">
+        <h1 class="text-3xl font-extrabold text-gray-900 dark:text-white">Nextride Admin</h1>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Sign in to your account</p>
+      </div>
+      
+      <div class="mt-8 bg-white dark:bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <form class="space-y-6" @submit.prevent="handleLogin">
+          <div v-if="error" class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-md p-4 mb-4">
+            <div class="flex">
+              <AlertCircleIcon class="h-5 w-5 text-red-400" />
+              <div class="ml-3">
+                <p class="text-sm text-red-700 dark:text-red-400">{{ error }}</p>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="mt-4">
-          <span
-            :class="[
-              stat.trend > 0 ? 'text-green-600' : 'text-red-600',
-              'text-sm font-medium'
-            ]"
-          >
-            {{ stat.trend > 0 ? '+' : '' }}{{ stat.trend }}%
-          </span>
-          <span class="text-sm text-gray-600 dark:text-gray-400 ml-2">vs last month</span>
-        </div>
-      </div>
-    </div>
+          
+          <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Email address
+            </label>
+            <div class="mt-1">
+              <input
+                id="email"
+                v-model="form.email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                required
+                class="appearance-none block w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
+                :class="{ 'border-red-300 dark:border-red-700': errors.email }"
+              />
+              <p v-if="errors.email" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.email }}</p>
+            </div>
+          </div>
 
-    <!-- Recent Bookings -->
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm">
-      <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">
-            Recent Bookings
-          </h2>
-          <button
-            @click="exportBookings"
-            class="inline-flex items-center px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
-          >
-            <DownloadIcon class="w-4 h-4 mr-2" />
-            Export
-          </button>
-        </div>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-          <thead class="bg-gray-50 dark:bg-gray-900">
-            <tr>
-              <th
-                v-for="header in bookingHeaders"
-                :key="header"
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-              >
-                {{ header }}
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr
-              v-for="booking in recentBookings"
-              :key="booking.id"
-              class="hover:bg-gray-50 dark:hover:bg-gray-700"
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Password
+            </label>
+            <div class="mt-1">
+              <input
+                id="password"
+                v-model="form.password"
+                name="password"
+                type="password"
+                autocomplete="current-password"
+                required
+                class="appearance-none block w-full p-3 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:text-white"
+                :class="{ 'border-red-300 dark:border-red-700': errors.password }"
+              />
+              <p v-if="errors.password" class="mt-1 text-sm text-red-600 dark:text-red-400">{{ errors.password }}</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <input
+                id="remember-me"
+                v-model="form.rememberMe"
+                name="remember-me"
+                type="checkbox"
+                class="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+              />
+              <label for="remember-me" class="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                Remember me
+              </label>
+            </div>
+
+            <div class="text-sm">
+              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">
+                Forgot your password?
+              </a>
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              :disabled="isLoading"
+              class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                {{ booking.id }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                {{ booking.customer }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                {{ booking.pickup }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                {{ booking.destination }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span
-                  class="px-2 py-1 text-xs font-medium rounded-full"
-                  :class="getStatusClass(booking.status)"
-                >
-                  {{ booking.status }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-white">
-                {{ booking.amount }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              <LoaderIcon v-if="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" />
+              Sign in
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import {
-  Users as UsersIcon,
-  Car as CarIcon,
-  DollarSign as RevenueIcon,
-  Star as RatingIcon,
-  Download as DownloadIcon
-} from 'lucide-vue-next'
+<script setup lang="ts">
+import { ref, reactive } from 'vue'
+import { AlertCircle as AlertCircleIcon, Loader as LoaderIcon } from 'lucide-vue-next'
 
-// Stats data
-const stats = [
-  {
-    name: 'Total Users',
-    value: '24,531',
-    trend: 12,
-    icon: UsersIcon
-  },
-  {
-    name: 'Active Vehicles',
-    value: '432',
-    trend: 8,
-    icon: CarIcon
-  },
-  {
-    name: 'Revenue',
-    value: '$103,430',
-    trend: 15,
-    icon: RevenueIcon
-  },
-  {
-    name: 'Avg. Rating',
-    value: '4.8',
-    trend: 2,
-    icon: RatingIcon
-  }
-]
+// Form state
+const form = reactive({
+  email: '',
+  password: '',
+  rememberMe: false
+})
 
-// Bookings table
-const bookingHeaders = [
-  'Booking ID',
-  'Customer',
-  'Pickup',
-  'Destination',
-  'Status',
-  'Amount'
-]
+const errors = reactive({
+  email: '',
+  password: ''
+})
 
-const recentBookings = [
-  {
-    id: 'B-1234',
-    customer: 'Alice Johnson',
-    pickup: '123 Main St',
-    destination: '456 Park Ave',
-    status: 'completed',
-    amount: '$25.00'
-  },
-  {
-    id: 'B-1235',
-    customer: 'Bob Smith',
-    pickup: '789 Oak Rd',
-    destination: '321 Pine St',
-    status: 'in_progress',
-    amount: '$32.50'
-  },
-  {
-    id: 'B-1236',
-    customer: 'Carol White',
-    pickup: '159 Elm St',
-    destination: '753 Maple Ave',
-    status: 'pending',
-    amount: '$18.75'
-  }
-]
+const error = ref('')
+const isLoading = ref(false)
 
-// Status styling
-const getStatusClass = (status) => {
-  const classes = {
-    completed: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-    in_progress: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
-    pending: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-    cancelled: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-  }
-  return classes[status] || ''
-}
-
-// Export functionality
-const exportBookings = () => {
-  const headers = bookingHeaders.join(',')
-  const rows = recentBookings.map(booking => 
-    Object.values(booking).join(',')
-  ).join('\n')
+// Form validation
+const validateForm = () => {
+  let isValid = true
+  errors.email = ''
+  errors.password = ''
   
-  const csv = `${headers}\n${rows}`
-  const blob = new Blob([csv], { type: 'text/csv' })
-  const url = window.URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = 'bookings.csv'
-  a.click()
-  window.URL.revokeObjectURL(url)
+  if (!form.email) {
+    errors.email = 'Email is required'
+    isValid = false
+  } else if (!/^\S+@\S+\.\S+$/.test(form.email)) {
+    errors.email = 'Email is invalid'
+    isValid = false
+  }
+  
+  if (!form.password) {
+    errors.password = 'Password is required'
+    isValid = false
+  } else if (form.password.length < 6) {
+    errors.password = 'Password must be at least 6 characters'
+    isValid = false
+  }
+  
+  return isValid
 }
 
-definePageMeta({
-      layout: 'dashboard'
-  })
+// Authentication
+const handleLogin = async () => {
+  if (!validateForm()) return
+  
+  isLoading.value = true
+  error.value = ''
+  
+  try {
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // For demo purposes, accept any valid email with admin@nextride.com
+    if (form.email === 'admin@nextride.com' && form.password === 'password') {
+      // Store auth token in localStorage
+      localStorage.setItem('nextride_token', 'demo_token_12345')
+      localStorage.setItem('nextride_user', JSON.stringify({
+        id: 1,
+        name: 'Admin User',
+        email: form.email,
+        role: 'admin'
+      }))
+      
+      // Redirect to dashboard
+      navigateTo('/dashboard')
+    } else {
+      error.value = 'Invalid email or password'
+    }
+  } catch (err) {
+    error.value = 'An error occurred. Please try again.'
+    console.error(err)
+  } finally {
+    isLoading.value = false
+  }
+}
+
+// Check if user is already logged in
+onMounted(() => {
+  const token = localStorage.getItem('nextride_token')
+  if (token) {
+    navigateTo('/dashboard')
+  }
+})
 </script>

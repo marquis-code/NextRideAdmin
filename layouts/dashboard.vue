@@ -13,7 +13,8 @@
           <div class="flex flex-col h-full">
             <!-- Logo -->
             <div class="h-16 flex items-center justify-between px-4 border-b dark:border-gray-700">
-              <span class="text-xl font-semibold dark:text-white">Nextride Admin</span>
+              <!-- <span class="text-xl font-semibold dark:text-white">Nextride Admin</span> -->
+               <img class="text-xl font-semibold dark:text-white h-8" src="@/assets/img/logo.png" />
               <button
                 @click="toggleSidebar"
                 class="md:hidden text-gray-500 hover:text-gray-900 dark:text-gray-400"
@@ -145,14 +146,14 @@
     //   { name: 'Settings', path: '/settings', icon: SettingsIcon, permission: 'settings:manage' }
     // ]
     const navigationItems = [
-      { name: 'Dashboard', path: '/', icon: HomeIcon, permission: null },
-      { name: 'Users', path: '/users', icon: UsersIcon, permission: null },
-      { name: 'Bookings', path: '/bookings', icon: BookingsIcon, permission: null },
-      { name: 'Finance', path: '/finance', icon: FinanceIcon, permission: null },
-      { name: 'Fleet', path: '/fleet', icon: FleetIcon, permission: null },
-      { name: 'Support', path: '/support', icon: SupportIcon, permission: null },
-      { name: 'Analytics', path: '/analytics', icon: AnalyticsIcon, permission: null },
-      { name: 'Settings', path: '/settings', icon: SettingsIcon, permission: null }
+      { name: 'Dashboard', path: '/dashboard', icon: HomeIcon, permission: null },
+      { name: 'Users', path: '/dashboard/users', icon: UsersIcon, permission: null },
+      { name: 'Bookings', path: '/dashboard/bookings', icon: BookingsIcon, permission: null },
+      { name: 'Finance', path: '/dashboard/finance', icon: FinanceIcon, permission: null },
+      { name: 'Fleet', path: '/dashboard/fleet', icon: FleetIcon, permission: null },
+      { name: 'Support', path: '/dashboard/support', icon: SupportIcon, permission: null },
+      { name: 'Analytics', path: '/dashboard/analytics', icon: AnalyticsIcon, permission: null },
+      { name: 'Settings', path: '/dashboard/settings', icon: SettingsIcon, permission: null }
     ]
   
     const filteredNavigationItems = computed(() => {
@@ -231,6 +232,10 @@
   // Initialize auth on app mount
   onMounted(() => {
     initAuth()
+  })
+
+  definePageMeta({
+      middleware: 'auth'
   })
   </script>
   
